@@ -7,14 +7,16 @@
       <q-markup-table>
         <thead class="bg-light-blue">
           <tr>
-            <th colspan="6">
+            <th colspan="8">
               <div class="text-h5 q-my-sm text-left">Todo</div>
             </th>
           </tr>
           <tr>
             <th class="text-center">Task ID</th>
+            <th class="text-center">Subject</th>
             <th class="text-center">Task</th>
             <th class="text-center">Assigned to</th>
+            <th class="text-center">Deadline</th>
             <th class="text-center">Notes</th>
             <th class="text-center">Status</th>
             <th class="text-center">Update</th>
@@ -23,8 +25,10 @@
         <tbody>
           <tr v-for="(todo, index) in todoData" :key="todo.id">
             <td class="text-left">{{ todo.id }}</td>
+            <td class="text-right">{{ todo.subject }}</td>
             <td class="text-right">{{ todo.task }}</td>
             <td class="text-right">{{ todo.assigned_to }}</td>
+            <td class="text-right">{{ todo.deadline }}</td>
             <td class="text-right">{{ todo.notes }}</td>
             <td class="text-right">{{ todo.status }}</td>
             <td>
@@ -52,7 +56,7 @@
           </tr>
 
           <tr v-if="canAdd">
-            <td colspan="6">
+            <td colspan="8">
               <q-btn
                 class="float-right"
                 color="blue"
@@ -77,6 +81,16 @@
             <div class="row q-px-lg">
               <q-input
                 class="col"
+                v-model="form.subject"
+                outlined
+                label="Subject"
+                :rules="[(val) => !!val || 'Field is required']"
+              >
+              </q-input>
+            </div>
+            <div class="row q-px-lg">
+              <q-input
+                class="col"
                 v-model="form.task"
                 outlined
                 label="Task"
@@ -92,6 +106,16 @@
                 :options="users"
                 label="Assign To"
               ></q-select>
+            </div>
+            <div class="row q-px-lg">
+              <q-input
+                class="col"
+                v-model="form.deadline"
+                outlined
+                label="Deadline"
+                :rules="[(val) => !!val || 'Field is required']"
+              >
+              </q-input>
             </div>
             <div class="row q-px-lg">
               <q-input
@@ -163,7 +187,9 @@ export default {
       options: ["On-Going", "Pending", "Finished"],
       form: {
         assigned_to: "",
+        subject: "",
         task: "",
+        deadline: "",
         notes: "",
         status: ref(null),
       },
@@ -242,11 +268,15 @@ export default {
         this.form.task = this.todoData[index].task;
         this.form.notes = this.todoData[index].notes;
         this.form.status = this.todoData[index].status;
+        this.form.subject = this.todoData[index].subject;
+        this.form.deadline = this.todoData[index].deadline;
       } else {
         this.form.assigned_to = null;
         this.form.task = null;
         this.form.notes = null;
         this.form.status = null;
+        this.form.subject = null;
+        this.form.deadline = null;
       }
     },
     show() {
